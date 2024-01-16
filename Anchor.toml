@@ -1,0 +1,16 @@
+[features]
+seeds = true
+skip-lint = false
+
+[programs.localnet]
+meco = "6CJXS1RoFaa6v53dg1NDitMgC8DSu3jwHDjkik6EYcbW"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "/home/witwiki/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
