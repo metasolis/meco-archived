@@ -19,8 +19,17 @@ class Operation(Enum):
     BID = 0
     CLAIM = 1
 
+
+class Calculator(Account):
+    owner: Pubkey
+    display: i64
+
 # @instruction
 # def initialiseMarket(owner: Signer, market: Empty[Market]):
-#     market = market.init(payer= owner, seeds= ['Market', owner])
+#     market = market.init(payer=owner, seeds=['Market', owner])
 #     market.owner = owner.key()
 
+@instruction
+def init_calculator(owner: Signer, calculator: Empty[Calculator]):
+    calculator = calculator.init(payer = owner, seeds = ['Calculator', owner])
+    calculator.owner = owner.key()

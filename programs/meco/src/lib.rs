@@ -222,4 +222,40 @@ mod meco {
     use super::*;
     use seahorse_util::*;
     use std::collections::HashMap;
+
+    #[derive(Accounts)]
+    pub struct InitCalculator<'info> {
+        #[account(mut)]
+        pub owner: Signer<'info>,
+        # [account (init , space = std :: mem :: size_of :: < dot :: program :: Calculator > () + 8 , payer = owner , seeds = ["Calculator" . as_bytes () . as_ref () , owner . key () . as_ref ()] , bump)]
+        pub calculator: Box<Account<'info, dot::program::Calculator>>,
+        pub rent: Sysvar<'info, Rent>,
+        pub system_program: Program<'info, System>,
+    }
+
+    pub fn init_calculator(ctx: Context<InitCalculator>) -> Result<()> {
+        let mut programs = HashMap::new();
+
+        programs.insert(
+            "system_program",
+            ctx.accounts.system_program.to_account_info(),
+        );
+
+        let programs_map = ProgramsMap(programs);
+        let owner = SeahorseSigner {
+            account: &ctx.accounts.owner,
+            programs: &programs_map,
+        };
+
+        let calculator = Empty {
+            account: dot::program::Calculator::load(&mut ctx.accounts.calculator, &programs_map),
+            bump: Some(ctx.bumps.calculator),
+        };
+
+        init_calculator_handler(owner.clone(), calculator.clone());
+
+        dot::program::Calculator::store(calculator.account);
+
+        return Ok(());
+    }
 }
